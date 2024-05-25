@@ -97,6 +97,8 @@ class AlpacaWindow(Adw.ApplicationWindow):
     remote_connection_switch = Gtk.Template.Child()
     remote_connection_entry = Gtk.Template.Child()
 
+    scroll_down_button = Gtk.Template.Child()
+
     toast_messages = {
         "error": [
             _("An error occurred"),
@@ -336,7 +338,7 @@ class AlpacaWindow(Adw.ApplicationWindow):
                 self.bot_message_box.append(message_text)
             else:
                 language = GtkSource.LanguageManager.get_default().get_language(part['language'])
-                buffer = GtkSource.Buffer.new_with_language(language)
+                buffer = GtkSource.Buffer()
                 buffer.set_text(part['text'])
                 buffer.set_style_scheme(GtkSource.StyleSchemeManager.get_default().get_scheme('classic-dark'))
                 source_view = GtkSource.View(
@@ -444,8 +446,7 @@ class AlpacaWindow(Adw.ApplicationWindow):
             self.chat_container.append(self.loading_spinner)
             self.show_message("", True)
 
-            vadjustment = self.chat_window.get_vadjustment()
-            vadjustment.set_value(vadjustment.get_upper())
+            self.scroll_down()
             thread = threading.Thread(target=self.run_message, args=(data['messages'], data['model']))
             thread.start()
 
@@ -1044,3 +1045,16 @@ class AlpacaWindow(Adw.ApplicationWindow):
         self.update_list_available_models()
         self.load_history()
         self.update_chat_list()
+
+    @Gtk.Template.Callback("on_scrolled_window_vadj_changed")
+    def on_scrolled_window_vadj_changed(self, adj):
+        if adj.get_value() == adj.get_upper() - adj.get_page_size():
+            self.scroll_down_button.set_visible(False)
+        else:
+            self.scroll_down_button.set_visible(True)
+
+    @Gtk.Template.Callback("on_scroll_down_clicked")
+    def scroll_down(self, *args):
+        adj = self.chat_window.get_vadjustment()
+        adj.set_value(adj.get_upper() - adj.get_page_size())
+        self.scroll_down_button.set_visible(False)

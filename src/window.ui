@@ -134,13 +134,37 @@
                     <property name="vexpand">true</property>
                     <property name="hexpand">true</property>
                     <child>
+                      <object class="GtkOverlay">
+                        <child type="overlay">
+                          <object class="GtkButton" id="scroll_down_button">
+                            <property name="icon-name">bottom-symbolic</property>
+                            <property name="hexpand">true</property>
+                            <property name="vexpand">true</property>
+                            <property name="valign">end</property>
+                            <property name="halign">end</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin-bottom">12</property>
+                            <signal name="clicked" handler="on_scroll_down_clicked"/>
+                            <style>
+                              <class name="osd"/>
+                              <class name="circular"/>
+                            </style>
+                          </object>
+                        </child>
+                    <child>
                       <object class="GtkScrolledWindow" id="chat_window">
                         <property name="propagate-natural-height">true</property>
                         <property name="kinetic-scrolling">true</property>
                         <property name="vexpand">true</property>
+                        <property name="vadjustment">
+                          <object class="GtkAdjustment">
+                            <signal name="value-changed" handler="on_scrolled_window_vadj_changed"/>
+                          </object>
+                        </property>
                         <style>
                           <class name="undershoot-bottom"/>
                         </style>
+
                         <child>
                           <object class="AdwClamp">
                             <property name="maximum-size">1000</property>
@@ -161,6 +185,8 @@
                           </object>
                         </child>
                       </object>
+                    </child>
+                    </object>
                     </child>
 
                     <child>
