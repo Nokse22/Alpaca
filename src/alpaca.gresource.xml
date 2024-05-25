@@ -3,6 +3,7 @@
   <gresource prefix="/com/jeffser/Alpaca">
     <file>style.css</file>
     <file>style-dark.css</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/bottom-symbolic.svg</file>
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
   </gresource>
